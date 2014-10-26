@@ -14,5 +14,11 @@
 # limitations under the License.
 #
 
-# This file should contain every project which should be built for host and target
-add_subdirectory(libDroneMovement)
+### libDroneMovement ###
+
+include_directories(
+    include/)
+
+add_library(
+    DroneMovement
+    src/AtCommandFactory.cpp)

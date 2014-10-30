@@ -22,3 +22,25 @@ include_directories(
 add_library(
     DroneMovement
     src/AtCommandFactory.cpp)
+
+
+### Unit Test ###
+
+enable_testing()
+find_package(GTest REQUIRED)
+find_package (Threads REQUIRED)
+
+include_directories(
+    include/)
+
+add_executable(
+    AtCommandFactoryUnitTest
+    test/AtCommandFactoryUnitTest.cpp
+    src/AtCommandFactory.cpp)
+
+target_link_libraries(
+    AtCommandFactoryUnitTest ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})
+
+install(TARGETS AtCommandFactoryUnitTest RUNTIME DESTINATION test)
+
+add_unit_test(AtCommandFactoryUnitTest)

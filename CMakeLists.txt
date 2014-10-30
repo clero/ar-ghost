@@ -18,6 +18,17 @@ cmake_minimum_required(VERSION 2.8)
 
 project(drone-ghost)
 
+# Unit Test declaration
+function (add_unit_test UnitTestName)
+    IF(NOT BUILD_DESTINATION STREQUAL "TARGET")
+        add_test(${UnitTestName} ${UnitTestName})
+        add_custom_command(TARGET ${UnitTestName} POST_BUILD COMMAND ${CMAKE_COMMAND}
+            -DTEST=${UnitTestName}
+            -DTARGET=$<TARGET_FILE:${UnitTestName}>
+            -P ${CMAKE_SOURCE_DIR}/cmake/unit_test_launcher.cmake)
+    ENDIF()
+endfunction()
+
 # General C and CXX Flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wall -Wextra -std=c++11")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wall -Wextra")

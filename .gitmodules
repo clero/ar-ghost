@@ -1,0 +1,3 @@
+[submodule "tools/Pre-commit-hooks"]
+	path = tools/Pre-commit-hooks
+	url = https://github.com/clero/Pre-commit-hooks.git

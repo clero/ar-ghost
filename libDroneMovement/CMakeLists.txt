@@ -28,14 +28,14 @@ add_library(
     src/AtCommandFactory.cpp
     src/AtCommandSender.cpp
     src/NavDataReceiver.cpp
-    src/NavDataParser.cpp)
+    src/NavDataParser.cpp
+    src/Drone.cpp)
 
 
 ### Unit Test ###
 
 enable_testing()
 find_package(GTest REQUIRED)
-find_package (Threads REQUIRED)
 
 include_directories(
     include/)

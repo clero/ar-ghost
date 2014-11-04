@@ -17,7 +17,7 @@
 
 #include "libDroneMovement/AtCommandFactory.hpp"
 
-#include <cstdint>
+#include <stdexcept>
 
 namespace ghost
 {
@@ -66,6 +66,9 @@ void AtCommandFactory::clearBit(int32_t& bitField, int bitToClear)
 
 int AtCommandFactory::floatingPointConversion(float argToConv)
 {
+    if (argToConv < -1.0 || argToConv > 1.0) {
+        throw std::range_error("AtCommand floating point parameter out of range");
+    }
     return *(reinterpret_cast<int*>(&argToConv));
 }
 

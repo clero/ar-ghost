@@ -148,17 +148,17 @@ TEST_F(AtCommandFactoryTest, configureCommand)
 {
     EXPECT_EQ(
         factory.configureCommand("control:altitude_max", "2000"),
-        "AT*CONFIG=1,\"control:altitude_max\",\"2000\"\r");
+        "AT*CONFIG_IDS=1,\"00000000\",\"00000000\",\"00000000\"\rAT*CONFIG=2,\"control:altitude_max\",\"2000\"\r");
 
     // Flip right command
     EXPECT_EQ(
         factory.configureCommand("control:flight_anim", "19,15"),
-        "AT*CONFIG=2,\"control:flight_anim\",\"19,15\"\r");
+        "AT*CONFIG_IDS=3,\"00000000\",\"00000000\",\"00000000\"\rAT*CONFIG=4,\"control:flight_anim\",\"19,15\"\r");
 
     // Led Anim (blink green)
     EXPECT_EQ(
         factory.configureCommand("leds:leds_anim", "0,1073741824,2"),
-        "AT*CONFIG=3,\"leds:leds_anim\",\"0,1073741824,2\"\r");
+        "AT*CONFIG_IDS=5,\"00000000\",\"00000000\",\"00000000\"\rAT*CONFIG=6,\"leds:leds_anim\",\"0,1073741824,2\"\r");
 }
 
 } /* ghost namespace */

@@ -28,6 +28,10 @@ AtCommandFactory::AtCommandFactory() : mSequence(1)
 {
 }
 
+const std::string AtCommandFactory::mSessionId = "00000000";
+const std::string AtCommandFactory::mProfileId = "00000000";
+const std::string AtCommandFactory::mApplicationId = "00000000";
+
 const std::string AtCommandFactory::mAtCommandPrefix = "AT*";
 const std::string AtCommandFactory::mAtCommandAssignement = "=";
 const std::string AtCommandFactory::mAtCommandSuffix = "\r";
@@ -38,6 +42,7 @@ const std::string AtCommandFactory::mAtCommandPcmdHeader = "PCMD";
 const std::string AtCommandFactory::mAtCommandPcmdMagHeader = "PCMD_MAG";
 const std::string AtCommandFactory::mAtCommandFtrimHeader = "FTRIM";
 const std::string AtCommandFactory::mAtCommandConfigHeader = "CONFIG";
+const std::string AtCommandFactory::mAtCommandConfigIdsHeader = "CONFIG_IDS";
 const std::string AtCommandFactory::mAtCommandComWdgHeader = "COMWDG";
 const std::string AtCommandFactory::mAtCommandCalibHeader = "CALIB";
 
@@ -219,13 +224,36 @@ const std::string AtCommandFactory::horizontalPlaneCalibrationCommand()
     return commandFactory(mAtCommandFtrimHeader);
 }
 
+const std::string AtCommandFactory::setConfigureIdsCommands()
+{
+    std::ostringstream atCmd;
+    atCmd << configureCommand("custom:session_id", mSessionId);
+    atCmd << configureCommand("custom:profile_id", mProfileId);
+    atCmd << configureCommand("custom:application_id", mApplicationId);
+
+    return atCmd.str();
+}
+
+const std::string AtCommandFactory::configureIdsCommand()
+{
+    return commandFactory<std::string>(
+        mAtCommandConfigIdsHeader,
+        "\"" + mSessionId + "\"",
+        "\"" + mProfileId + "\"",
+        "\"" + mApplicationId + "\"");
+}
+
 const std::string AtCommandFactory::configureCommand(const std::string& argA,
                                                      const std::string& argB)
 {
-    return commandFactory<std::string>(
+    std::ostringstream atCmd;
+    atCmd << configureIdsCommand();
+    atCmd << commandFactory<std::string>(
         mAtCommandConfigHeader,
         "\"" + argA + "\"",
         "\"" + argB + "\"");
+
+    return atCmd.str();
 }
 
 const std::string AtCommandFactory::magnetoCalibrationCommand()

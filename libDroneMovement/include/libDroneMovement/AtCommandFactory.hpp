@@ -18,6 +18,7 @@
 #pragma once
 
 #include <string>
+#include <atomic>
 #include <sstream>
 
 namespace ghost
@@ -111,6 +112,9 @@ public:
     /** Generate the AT Command allowing to modify current drone's internal configuration */
     const std::string configureCommand(const std::string& argA, const std::string& argB);
 
+    /** Generate the AT Command allowing to modify current drone's internal configuration ids. */
+    const std::string setConfigureIdsCommands();
+
     /** Generate the AT Command allowing the drone to calibrate his magnetometer */
     const std::string magnetoCalibrationCommand();
 
@@ -203,9 +207,20 @@ private:
     /** Prepare flags for commands using REF header */
     int32_t prepareRefHeaderFlag();
 
+    /**
+     * Generate the AT Command containing or application configuration ids.
+     * This function is called every time the configureCommand function is called, it is
+     * necessary to modify the drone internal configuration.
+     */
+    const std::string configureIdsCommand();
 
-    /** Current Sequence number */
-    uint32_t mSequence;
+
+    /**
+     *  Current Sequence number
+     *  It needs to be atomic as a command can be sent by the
+     *  AtCommandSender or by the Drone entity.
+     */
+    std::atomic_uint_fast32_t mSequence;
 
     /** At Command parts */
     static const std::string mAtCommandPrefix;
@@ -219,8 +234,14 @@ private:
     static const std::string mAtCommandPcmdMagHeader;
     static const std::string mAtCommandFtrimHeader;
     static const std::string mAtCommandConfigHeader;
+    static const std::string mAtCommandConfigIdsHeader;
     static const std::string mAtCommandComWdgHeader;
     static const std::string mAtCommandCalibHeader;
+
+    /** Application Ids */
+    static const std::string mSessionId;
+    static const std::string mProfileId;
+    static const std::string mApplicationId;
 };
 
 } /* ghost namespace */

@@ -16,12 +16,17 @@
 
 ### libDroneMovement ###
 
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost COMPONENTS log thread system REQUIRED)
+find_package (Threads REQUIRED)
+
 include_directories(
     include/)
 
 add_library(
     DroneMovement
-    src/AtCommandFactory.cpp)
+    src/AtCommandFactory.cpp
+    src/AtCommandSender.cpp)
 
 
 ### Unit Test ###

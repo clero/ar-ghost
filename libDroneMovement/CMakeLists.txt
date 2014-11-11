@@ -26,7 +26,8 @@ include_directories(
 add_library(
     DroneMovement
     src/AtCommandFactory.cpp
-    src/AtCommandSender.cpp)
+    src/AtCommandSender.cpp
+    src/NavDataParser.cpp)
 
 
 ### Unit Test ###

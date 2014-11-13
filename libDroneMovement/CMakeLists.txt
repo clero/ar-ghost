@@ -27,6 +27,7 @@ add_library(
     DroneMovement
     src/AtCommandFactory.cpp
     src/AtCommandSender.cpp
+    src/NavDataReceiver.cpp
     src/NavDataParser.cpp)
 
 

@@ -45,6 +45,7 @@ const std::string AtCommandFactory::mAtCommandConfigHeader = "CONFIG";
 const std::string AtCommandFactory::mAtCommandConfigIdsHeader = "CONFIG_IDS";
 const std::string AtCommandFactory::mAtCommandComWdgHeader = "COMWDG";
 const std::string AtCommandFactory::mAtCommandCalibHeader = "CALIB";
+const std::string AtCommandFactory::mAtCommandControlHeader = "CTRL";
 
 const std::string AtCommandFactory::commandFactory(const std::string& atCmdHeader)
 {
@@ -262,6 +263,15 @@ const std::string AtCommandFactory::magnetoCalibrationCommand()
     int deviceToCalibrate = 0;
 
     return commandFactory<int>(mAtCommandCalibHeader, deviceToCalibrate);
+}
+
+const std::string AtCommandFactory::ackConfigureCommand()
+{
+    // Value from the SDK which reset the Ack field from AtCommands
+    int ackControlMode = 5;
+    int ackControlArg2 = 0;
+
+    return commandFactory<int>(mAtCommandControlHeader, ackControlMode, ackControlArg2);
 }
 
 } /* ghost namespace */

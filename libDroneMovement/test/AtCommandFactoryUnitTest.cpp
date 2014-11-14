@@ -161,5 +161,10 @@ TEST_F(AtCommandFactoryTest, configureCommand)
         "AT*CONFIG_IDS=5,\"00000000\",\"00000000\",\"00000000\"\rAT*CONFIG=6,\"leds:leds_anim\",\"0,1073741824,2\"\r");
 }
 
+TEST_F(AtCommandFactoryTest, ackConfigureCommand)
+{
+    EXPECT_EQ(factory.ackConfigureCommand(), "AT*CTRL=1,5,0\r");
+}
+
 } /* ghost namespace */
 } /* libDroneMovement namespace  */

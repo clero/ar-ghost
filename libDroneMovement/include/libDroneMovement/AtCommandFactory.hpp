@@ -118,6 +118,9 @@ public:
     /** Generate the AT Command allowing the drone to calibrate his magnetometer */
     const std::string magnetoCalibrationCommand();
 
+    /** Generate the AT Command allowing the drone to ack configure command */
+    const std::string ackConfigureCommand();
+
 private:
 
     /**
@@ -237,6 +240,7 @@ private:
     static const std::string mAtCommandConfigIdsHeader;
     static const std::string mAtCommandComWdgHeader;
     static const std::string mAtCommandCalibHeader;
+    static const std::string mAtCommandControlHeader;
 
     /** Application Ids */
     static const std::string mSessionId;

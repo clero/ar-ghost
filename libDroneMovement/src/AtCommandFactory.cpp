@@ -23,6 +23,8 @@ namespace ghost
 {
 namespace libDroneMovement
 {
+namespace atCommand
+{
 
 AtCommandFactory::AtCommandFactory() : mSequence(1)
 {
@@ -274,5 +276,6 @@ const std::string AtCommandFactory::ackConfigureCommand()
     return commandFactory<int>(mAtCommandControlHeader, ackControlMode, ackControlArg2);
 }
 
-} /* ghost namespace */
+} /* atCommand namespace */
 } /* libDroneMovement namespace  */
+} /* ghost namespace */

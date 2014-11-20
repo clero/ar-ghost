@@ -25,6 +25,8 @@ namespace ghost
 {
 namespace libDroneMovement
 {
+namespace atCommand
+{
 
 /** Object Factory allowing to create ARDrone AT Commands easily. */
 class AtCommandFactory
@@ -248,5 +250,6 @@ private:
     static const std::string mApplicationId;
 };
 
-} /* ghost namespace */
-} /* libDroneMovement namespace  */
+} /* atCommand namespace */
+} /* libDroneMovement namespace */
+} /* ghost namespace  */

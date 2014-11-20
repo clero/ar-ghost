@@ -22,6 +22,8 @@ namespace ghost
 {
 namespace libDroneMovement
 {
+namespace atCommand
+{
 
 class AtCommandFactoryTest : public testing::Test
 {
@@ -166,5 +168,6 @@ TEST_F(AtCommandFactoryTest, ackConfigureCommand)
     EXPECT_EQ(factory.ackConfigureCommand(), "AT*CTRL=1,5,0\r");
 }
 
-} /* ghost namespace */
+} /* atCommand namespace */
 } /* libDroneMovement namespace  */
+} /* ghost namespace */

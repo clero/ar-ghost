@@ -15,6 +15,9 @@
 #
 
 ### libDroneVideo ###
+find_package(OpenCV COMPONENTS core imgproc REQUIRED)
+find_package(Boost COMPONENTS log REQUIRED)
+find_package(Threads REQUIRED)
 
 include_directories(
     include/
@@ -22,6 +25,7 @@ include_directories(
 
 add_library(
     DroneVideo
-    src/FrameGrabber.cpp)
+    src/FrameGrabber.cpp
+    src/LineDetection.cpp)
 
-target_link_libraries(DroneVideo)
+target_link_libraries(DroneVideo ${OpenCV_LIBS} ${CMAKE_THREAD_LIBS_INIT})

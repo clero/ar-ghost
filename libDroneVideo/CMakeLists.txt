@@ -14,5 +14,14 @@
 # limitations under the License.
 #
 
-# This file should contain every project which should be built for host and target
-add_subdirectory(libDroneVideo)
+### libDroneVideo ###
+
+include_directories(
+    include/
+    ${PROJECT_SOURCE_DIR}/libDroneVideoSharing/include/)
+
+add_library(
+    DroneVideo
+    src/FrameGrabber.cpp)
+
+target_link_libraries(DroneVideo)

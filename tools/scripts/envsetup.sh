@@ -25,6 +25,7 @@ function croot {
 function mm {
     # Target Build
     croot
+    rm CMakeCache.txt
     cmake . -DBUILD_DESTINATION=TARGET
     cd - > /dev/null
     make $@
@@ -41,6 +42,7 @@ function mm {
 function mma {
     # Target Build
     croot
+    rm CMakeCache.txt
     cmake . -DBUILD_DESTINATION=TARGET
     make $@
 

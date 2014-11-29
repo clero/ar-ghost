@@ -47,6 +47,17 @@ IF(BUILD_DESTINATION STREQUAL "TARGET")
     # File containing every subdirectory to build (target only)
     include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/target_projects.cmake)
 
+ELSEIF(BUILD_DESTINATION STREQUAL "TARGETSOFTFP")
+    MESSAGE("SoftFp Target Build requested")
+
+    set(SOFTFP true)
+
+    # File containing configuration to cross-compile
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/arm-gnueabi.toolchain.cmake)
+
+    # File containing every subdirectory to build (target only)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/target_softfp_projects.cmake)
+
 ELSE()
     MESSAGE("Host Build requested")
 
@@ -58,5 +69,7 @@ ELSE()
 
 ENDIF()
 
-# File containing every subdirectory to build (host and target)
-include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/multiplatform_projects.cmake)
+IF (NOT SOFTFP)
+    # File containing every subdirectory to build (host and hf target)
+    include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/multiplatform_projects.cmake)
+ENDIF()

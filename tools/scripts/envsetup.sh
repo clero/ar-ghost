@@ -30,6 +30,13 @@ function mm {
     cd - > /dev/null
     make $@
 
+    # Target SoftFp Build
+    croot
+    rm CMakeCache.txt
+    cmake . -DBUILD_DESTINATION=TARGETSOFTFP
+    cd - > /dev/null
+    make $@
+
     # Host Build
     croot
     rm CMakeCache.txt
@@ -44,6 +51,12 @@ function mma {
     croot
     rm CMakeCache.txt
     cmake . -DBUILD_DESTINATION=TARGET
+    make $@
+
+    # Target SoftFp Build
+    croot
+    rm CMakeCache.txt
+    cmake . -DBUILD_DESTINATION=TARGETSOFTFP
     make $@
 
     # Host Build

@@ -25,7 +25,6 @@ include_directories(
 
 add_library(
     DroneVideo
-    src/FrameGrabber.cpp
-    src/LineDetection.cpp)
+    src/FrameGrabber.cpp)
 
 target_link_libraries(DroneVideo ${OpenCV_LIBS} ${CMAKE_THREAD_LIBS_INIT})

@@ -14,7 +14,23 @@
 # limitations under the License.
 #
 
-# This file should contain every project which should be built for host and target
-add_subdirectory(libDroneVideo)
-add_subdirectory(libDroneMovement)
-add_subdirectory(core)
+### Core ###
+
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost COMPONENTS log thread system REQUIRED)
+find_package (Threads REQUIRED)
+
+include_directories(
+    ${PROJECT_SOURCE_DIR}/libDroneMovement/include
+    ${PROJECT_SOURCE_DIR}/libDroneVideo/include
+    ${PROJECT_SOURCE_DIR}/libDroneVideoSharing/include)
+
+add_executable(
+    main
+    src/Main.cpp)
+
+link_directories(${LIBRARY_OUTPUT_PATH})
+
+target_link_libraries(main DroneMovement DroneVideo ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+
+install(TARGETS main RUNTIME DESTINATION bin)

@@ -16,3 +16,4 @@
 
 # This file should contain every project which should be built for host and target
 add_subdirectory(libDroneVideo)
+add_subdirectory(libDroneMovement)

@@ -24,4 +24,6 @@ add_library(
     src/CheckAngle.c
     src/SystemDrone.c
     src/kcg_consts.c
-    src/kcg_types.c)
+    src/kcg_types.c
+    src/SystemFlying.c
+    src/SystemEmergency.c)

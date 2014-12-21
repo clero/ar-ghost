@@ -1,6 +1,6 @@
 /* $************* KCG Version 6.4 beta3 (build i9) **************
-** Command: kcg64.exe -config U:/Windows/Bureau/ProjetDRONE/AR-Ghost/KCG/config.txt
-** Generation date: 2014-12-10T14:20:16
+** Command: kcg64.exe -config U:/Windows/Bureau/Projet DRONE/v2/KCG/config.txt
+** Generation date: 2014-12-17T14:43:37
 *************************************************************$ */
 #ifndef _KCG_TYPES_H_
 #define _KCG_TYPES_H_
@@ -49,34 +49,62 @@ typedef char kcg_char;
 #define kcg_assign_array kcg_assign
 #endif /* kcg_assign_array */
 
-/* SystemDrone::DroneMovement */
-typedef enum kcg_tag_SSM_TR_DroneMovement {
-    SSM_TR_no_trans_DroneMovement,
-    SSM_TR_STANDBY_1_DroneMovement,
-    SSM_TR_STANDBY_2_DroneMovement,
-    SSM_TR_STANDBY_3_DroneMovement,
-    SSM_TR_STANDBY_4_DroneMovement,
-    SSM_TR_STANDBY_5_DroneMovement,
-    SSM_TR_CHANGE_WAY_1_DroneMovement,
-    SSM_TR_TURN_LEFTRIGHT_1_DroneMovement,
-    SSM_TR_GO_LEFT_1_DroneMovement,
-    SSM_TR_GO_RIGHT_1_DroneMovement,
-    SSM_TR_FLYING_1_DroneMovement,
-    SSM_TR_CTRL_1_DroneMovement,
-    SSM_TR_CTRL_2_DroneMovement
-} SSM_TR_DroneMovement;
-/* SystemDrone::DroneMovement */
-typedef enum kcg_tag_SSM_ST_DroneMovement {
-    SSM_st_STANDBY_DroneMovement,
-    SSM_st_CHANGE_WAY_DroneMovement,
-    SSM_st_TURN_LEFTRIGHT_DroneMovement,
-    SSM_st_GO_LEFT_DroneMovement,
-    SSM_st_GO_RIGHT_DroneMovement,
-    SSM_st_FLYING_DroneMovement,
-    SSM_st_CTRL_DroneMovement
-} SSM_ST_DroneMovement;
+/* SystemFlying::FlyingMode */
+typedef enum kcg_tag_SSM_TR_FlyingMode {
+    SSM_TR_no_trans_FlyingMode,
+    SSM_TR_STANDBY_1_FlyingMode,
+    SSM_TR_STANDBY_2_FlyingMode,
+    SSM_TR_STANDBY_3_FlyingMode,
+    SSM_TR_STANDBY_4_FlyingMode,
+    SSM_TR_STANDBY_5_FlyingMode,
+    SSM_TR_CHANGE_WAY_1_FlyingMode,
+    SSM_TR_TURN_LEFTRIGHT_1_FlyingMode,
+    SSM_TR_GO_LEFT_1_FlyingMode,
+    SSM_TR_GO_RIGHT_1_FlyingMode,
+    SSM_TR_FLYING_1_FlyingMode
+} SSM_TR_FlyingMode;
+/* SystemFlying::FlyingMode */
+typedef enum kcg_tag_SSM_ST_FlyingMode {
+    SSM_st_STANDBY_FlyingMode,
+    SSM_st_CHANGE_WAY_FlyingMode,
+    SSM_st_TURN_LEFTRIGHT_FlyingMode,
+    SSM_st_GO_LEFT_FlyingMode,
+    SSM_st_GO_RIGHT_FlyingMode,
+    SSM_st_FLYING_FlyingMode
+} SSM_ST_FlyingMode;
+/* SystemEmergency::EmergencyMode */
+typedef enum kcg_tag_SSM_TR_EmergencyMode {
+    SSM_TR_no_trans_EmergencyMode,
+    SSM_TR_MIDDLE_SEARCH_1_EmergencyMode,
+    SSM_TR_MIDDLE_SEARCH_2_EmergencyMode,
+    SSM_TR_LEFT_SEARCH_1_EmergencyMode,
+    SSM_TR_RIGHT_SEARCH_1_EmergencyMode,
+    SSM_TR_LEFT_COMEBACK_1_EmergencyMode,
+    SSM_TR_RIGHT_COMEBACK_1_EmergencyMode
+} SSM_TR_EmergencyMode;
+/* SystemEmergency::EmergencyMode */
+typedef enum kcg_tag_SSM_ST_EmergencyMode {
+    SSM_st_MIDDLE_SEARCH_EmergencyMode,
+    SSM_st_LEFT_SEARCH_EmergencyMode,
+    SSM_st_RIGHT_SEARCH_EmergencyMode,
+    SSM_st_LEFT_COMEBACK_EmergencyMode,
+    SSM_st_RIGHT_COMEBACK_EmergencyMode
+} SSM_ST_EmergencyMode;
+/* SystemDrone::Drone */
+typedef enum kcg_tag_SSM_TR_Drone {
+    SSM_TR_no_trans_Drone,
+    SSM_TR_FLYING_1_Drone,
+    SSM_TR_EMERGENCY_1_Drone,
+    SSM_TR_WAITING_1_Drone
+} SSM_TR_Drone;
+/* SystemDrone::Drone */
+typedef enum kcg_tag_SSM_ST_Drone {
+    SSM_st_FLYING_Drone,
+    SSM_st_EMERGENCY_Drone,
+    SSM_st_WAITING_Drone
+} SSM_ST_Drone;
 #endif /* _KCG_TYPES_H_ */
 /* $************* KCG Version 6.4 beta3 (build i9) **************
 ** kcg_types.h
-** Generation date: 2014-12-10T14:20:16
+** Generation date: 2014-12-17T14:43:37
 *************************************************************$ */

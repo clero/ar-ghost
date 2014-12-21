@@ -1,6 +1,6 @@
 /* $************* KCG Version 6.4 beta3 (build i9) **************
-** Command: kcg64.exe -config U:/Windows/Bureau/ProjetDRONE/AR-Ghost/KCG/config.txt
-** Generation date: 2014-12-10T14:20:16
+** Command: kcg64.exe -config U:/Windows/Bureau/Projet DRONE/v2/KCG/config.txt
+** Generation date: 2014-12-17T14:43:37
 *************************************************************$ */
 
 #include "kcg_consts.h"
@@ -32,14 +32,13 @@ void CheckAngle(
     /* CheckAngle::_L10 */
     kcg_real _L10;
     /* CheckAngle::_L16 */ kcg_real _L16;
-    /* CheckAngle::_L25 */ kcg_real _L25;
 
-    _L25 = -10.0;
+    _L16 = LineAngle + currentAngle;
     if (ImageUpdate) {
-        if (LineAngle > 10.0) {
-            outC->angleCible = LineAngle + currentAngle;
-        } else if (LineAngle < _L25) {
-            outC->angleCible = currentAngle + LineAngle;
+        if (LineAngle > 5.0) {
+            outC->angleCible = _L16;
+        } else if (LineAngle < -5.0) {
+            outC->angleCible = _L16;
         } else {
             outC->angleCible = currentAngle;
         }
@@ -64,7 +63,7 @@ void CheckAngle(
     }
     if (LineAngle > 10.0) {
         outC->YawSpeed = -0.2;
-    } else if (LineAngle < _L25) {
+    } else if (LineAngle < -10.0) {
         outC->YawSpeed = 0.2;
     } else {
         outC->YawSpeed = 0.0;
@@ -74,5 +73,5 @@ void CheckAngle(
 
 /* $************* KCG Version 6.4 beta3 (build i9) **************
 ** CheckAngle.c
-** Generation date: 2014-12-10T14:20:16
+** Generation date: 2014-12-17T14:43:37
 *************************************************************$ */

@@ -1,12 +1,13 @@
 /* $************* KCG Version 6.4 beta3 (build i9) **************
-** Command: kcg64.exe -config U:/Windows/Bureau/ProjetDRONE/AR-Ghost/KCG/config.txt
-** Generation date: 2014-12-10T14:20:16
+** Command: kcg64.exe -config U:/Windows/Bureau/Projet DRONE/v2/KCG/config.txt
+** Generation date: 2014-12-17T14:43:37
 *************************************************************$ */
 #ifndef _SystemDrone_H_
 #define _SystemDrone_H_
 
 #include "kcg_types.h"
-#include "CheckAngle.h"
+#include "SystemFlying.h"
+#include "SystemEmergency.h"
 
 /* ========================  input structure  ====================== */
 typedef struct {
@@ -16,6 +17,7 @@ typedef struct {
     kcg_bool /* SystemDrone::GoRight */ GoRight;
     kcg_real /* SystemDrone::currentAngle */ currentAngle;
     kcg_bool /* SystemDrone::ImageUpdate */ ImageUpdate;
+    kcg_bool /* SystemDrone::LineDetected */ LineDetected;
 } inC_SystemDrone;
 
 /* ========================  context type  ========================= */
@@ -27,18 +29,12 @@ typedef struct {
     kcg_real /* SystemDrone::Yaw */ Yaw;
     /* -----------------------  no local probes  ----------------------- */
     /* -------------------- initialization variables  ------------------ */
-    kcg_bool init3;
-    kcg_bool init2;
-    kcg_bool init1;
     kcg_bool init;
     /* ----------------------- local memories  ------------------------- */
-    kcg_int times_5;
-    kcg_int times_6;
-    kcg_int times_4;
-    SSM_ST_DroneMovement /* SystemDrone::DroneMovement */ DroneMovement_state_nxt;
-    kcg_bool /* SystemDrone::DroneMovement */ DroneMovement_reset_act;
+    SSM_ST_Drone /* SystemDrone::Drone */ Drone_state_nxt;
     /* ---------------------  sub nodes' contexts  --------------------- */
-    outC_CheckAngle /* 1 */ Context_1;
+    outC_SystemEmergency /* 1 */ Context_1;
+    outC_SystemFlying /* 5 */ Context_5;
     /* ----------------- no clocks of observable data ------------------ */
 } outC_SystemDrone;
 
@@ -51,5 +47,5 @@ extern void SystemDrone_init(outC_SystemDrone* outC);
 #endif /* _SystemDrone_H_ */
 /* $************* KCG Version 6.4 beta3 (build i9) **************
 ** SystemDrone.h
-** Generation date: 2014-12-10T14:20:16
+** Generation date: 2014-12-17T14:43:37
 *************************************************************$ */

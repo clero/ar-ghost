@@ -48,6 +48,19 @@ public:
     LineDetector(const FrameType frame, const int imgWidth, const int mImgHeight);
     ~LineDetector();
 
+    /**
+     * Exception raised when the detection algorithm detect something odd.
+     * Need to be catched by the user of this class in order to retry the
+     * detection on another frame.
+     */
+    class LineDetectionError : public std::runtime_error
+    {
+    public:
+        LineDetectionError(std::string const& msg) : std::runtime_error(msg)
+        {
+        }
+    };
+
     double getLineAngle();
     bool isInRightWay();
     bool needToGoLeft();
@@ -113,8 +126,16 @@ LineDetector<FrameType>::LineDetector(const FrameType frame,
     cv::HoughLines(droneImg, mLines, 1, CV_PI / 180, 100, 0, 0);
 
     proccessAxis(true);
+
+    // Let's see if we have detected the line correctly
     if (std::isnan(mLineAngle)) {
+        // Let's try through the other axis
         proccessAxis(false);
+    }
+
+    // If the line remains not found, throw an exception
+    if (std::isnan(mLineAngle)) {
+        throw LineDetectionError("Line Angle is NaN");
     }
 }
 
@@ -305,6 +326,13 @@ void LineDetector<FrameType>::computeRelativePosition(bool computeLeftAxis)
         mNeedToGoLeft = true;
     } else {
         mNeedToGoLeft = false;
+    }
+
+    // Check that results are meaningfull
+    if (mNeedToGoLeft && mNeedToGoRight) {
+        // We need to go left and right, something is wrong
+        throw LineDetectionError(
+                  "when analysing lines: we need to go left and right at the same time");
     }
 }
 

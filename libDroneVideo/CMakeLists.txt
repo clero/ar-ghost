@@ -14,5 +14,25 @@
 # limitations under the License.
 #
 
-# This file should contain every project which should be built only for softfp target
-add_subdirectory(libDroneVideoSharing)
+### libDroneVideo ###
+find_package(OpenCV COMPONENTS core imgproc REQUIRED)
+find_package(Threads REQUIRED)
+
+include_directories(
+    include/
+    ${PROJECT_SOURCE_DIR}/libDroneVideoSharing/include/)
+
+add_library(
+    DroneVideo
+    src/FrameGrabber.cpp)
+
+target_link_libraries(DroneVideo ${OpenCV_LIBS} ${CMAKE_THREAD_LIBS_INIT})
+
+set(Boost_USE_STATIC_LIBS ON)
+find_package(Boost COMPONENTS log thread system REQUIRED)
+
+add_executable(
+    VideoTest
+    test/VideoTest.cpp)
+
+target_link_libraries(VideoTest DroneVideo ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})

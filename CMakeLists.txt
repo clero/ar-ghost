@@ -32,6 +32,7 @@ endfunction()
 # General C and CXX Flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror -Wall -Wextra -std=c++11")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror -Wall -Wextra")
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined -Wl,-z,noexecstack")
 
 # Project Build Directories
 set(HOST_BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build/host)

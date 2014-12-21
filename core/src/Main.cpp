@@ -48,7 +48,11 @@ int main(void)
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     double lineAngle = 0.0;
+    bool needToGoLeft = false;
+    bool needToGoRight = false;
     bool needImageUpdate = true;
+    bool lineDetected = true;
+    int count = 0;
 
     for (size_t i = 0; i < 1000; i++) {
 
@@ -64,19 +68,31 @@ int main(void)
                 320,
                 240);
 
+            lineDetected = true;
             lineAngle = lineDetector.getLineAngle();
+            needToGoRight = lineDetector.needToGoRight();
+            needToGoLeft = lineDetector.needToGoLeft();
 
             if (std::isnan(lineAngle)) {
                 // we don't see the line, let's assume we are good for now
                 lineAngle = 0.0;
+                count++;
+            } else {
+                lineDetected = true;
+                count = 0;
+            }
+
+            if (count >= 5) {
+                lineDetected = false;
             }
 
             inputAutoPilot.LineAngle = lineAngle;
             inputAutoPilot.RightWay = true;
-            inputAutoPilot.GoLeft = false;
-            inputAutoPilot.GoRight = false;
+            inputAutoPilot.GoLeft = needToGoLeft;
+            inputAutoPilot.GoRight = needToGoRight;
 
             inputAutoPilot.ImageUpdate = needImageUpdate;
+            inputAutoPilot.LineDetected = lineDetected;
 
             needImageUpdate = false;
         } else {

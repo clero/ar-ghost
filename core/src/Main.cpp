@@ -24,6 +24,7 @@ extern "C"
 #include <libDroneMovement/Drone.hpp>
 #include <libDroneVideo/FrameGrabber.hpp>
 #include <libDroneVideo/LineDetector.hpp>
+
 #include <chrono>
 #include <thread>
 
@@ -62,24 +63,23 @@ int main(void)
 
         if (needImageUpdate) {
             // Frame Analysis
-            std::cout << "Update Image: " << std::endl;
-            LineDetector<FrameGrabber::DroneVerticalFrame> lineDetector(
-                frameGrabber.getNextVerticalFrame(),
-                320,
-                240);
+            try {
+                LineDetector<FrameGrabber::DroneVerticalFrame> lineDetector(
+                    frameGrabber.getNextVerticalFrame(),
+                    320,
+                    240);
 
-            lineDetected = true;
-            lineAngle = lineDetector.getLineAngle();
-            needToGoRight = lineDetector.needToGoRight();
-            needToGoLeft = lineDetector.needToGoLeft();
-
-            if (std::isnan(lineAngle)) {
+                lineDetected = true;
+                count = 0;
+                lineAngle = lineDetector.getLineAngle();
+                needToGoRight = lineDetector.needToGoRight();
+                needToGoLeft = lineDetector.needToGoLeft();
+            }
+            catch (LineDetector<FrameGrabber::DroneVerticalFrame>::LineDetectionError e) {
+                // log
                 // we don't see the line, let's assume we are good for now
                 lineAngle = 0.0;
                 count++;
-            } else {
-                lineDetected = true;
-                count = 0;
             }
 
             if (count >= 5) {
@@ -90,7 +90,6 @@ int main(void)
             inputAutoPilot.RightWay = true;
             inputAutoPilot.GoLeft = needToGoLeft;
             inputAutoPilot.GoRight = needToGoRight;
-
             inputAutoPilot.ImageUpdate = needImageUpdate;
             inputAutoPilot.LineDetected = lineDetected;
 
@@ -105,7 +104,6 @@ int main(void)
 
         std::cout << "Angle Ligne: " << lineAngle << std::endl;
         std::cout << "Angle Drone: " << currentAngle << std::endl;
-
         std::cout << "Yaw speed Drone: " << outputAutoPilot.Yaw << std::endl;
 
         SystemDrone(&inputAutoPilot, &outputAutoPilot);

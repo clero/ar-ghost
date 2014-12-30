@@ -15,6 +15,12 @@
  *
  */
 
+extern "C"
+{
+/** LibLineFollowing */
+#include "SystemDrone.h"
+}
+
 #include <libDroneMovement/Drone.hpp>
 #include <libDroneVideo/FrameGrabber.hpp>
 #include <libDroneVideo/LineDetector.hpp>
@@ -29,58 +35,74 @@ int main(void)
     Drone drone("127.0.0.1");
     FrameGrabber frameGrabber = FrameGrabber();
 
+    // Auto Pilot initialization
+    inC_SystemDrone inputAutoPilot;
+    outC_SystemDrone outputAutoPilot;
+
+    SystemDrone_init(&outputAutoPilot);
+
     drone.takeOff();
 
-    for (size_t i = 0; i < 100; i++) {
-        LineDetector<FrameGrabber::DroneVerticalFrame> lineDetector(
-            frameGrabber.getNextVerticalFrame(),
-            320,
-            240);
+    // Drop Frames
+    frameGrabber.getNextVerticalFrame(),
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-        double lineAngle = lineDetector.getLineAngle();
+    double lineAngle = 0.0;
+    bool needImageUpdate = true;
+
+    for (size_t i = 0; i < 1000; i++) {
+
+        if (i % 10 == 0) {
+            needImageUpdate = true;
+        }
+
+        if (needImageUpdate) {
+            // Frame Analysis
+            std::cout << "Update Image: " << std::endl;
+            LineDetector<FrameGrabber::DroneVerticalFrame> lineDetector(
+                frameGrabber.getNextVerticalFrame(),
+                320,
+                240);
+
+            lineAngle = lineDetector.getLineAngle();
+
+            if (std::isnan(lineAngle)) {
+                // we don't see the line, let's assume we are good for now
+                lineAngle = 0.0;
+            }
+
+            inputAutoPilot.LineAngle = lineAngle;
+            inputAutoPilot.RightWay = true;
+            inputAutoPilot.GoLeft = false;
+            inputAutoPilot.GoRight = false;
+
+            inputAutoPilot.ImageUpdate = needImageUpdate;
+
+            needImageUpdate = false;
+        } else {
+            inputAutoPilot.ImageUpdate = needImageUpdate;
+        }
 
         float currentAngle = drone.getPsiAngle() / 1000.0;
+
+        inputAutoPilot.currentAngle = currentAngle;
+
         std::cout << "Angle Ligne: " << lineAngle << std::endl;
         std::cout << "Angle Drone: " << currentAngle << std::endl;
 
-        if (std::isnan(lineAngle)) {
-            // we don't see the line, let's assume we are good for now
-            lineAngle = 0.0;
-        }
+        std::cout << "Yaw speed Drone: " << outputAutoPilot.Yaw << std::endl;
 
-        float yawSpeed = 0.0;
-        float angleCible = currentAngle;
+        SystemDrone(&inputAutoPilot, &outputAutoPilot);
 
-        if (lineAngle > 10.0) {
-            // We need to go left
-            yawSpeed = -0.2;
-            angleCible -= lineAngle;
-        }
-        if (lineAngle < -10.0) {
-            yawSpeed = 0.2;
-            angleCible += lineAngle;
-        }
+        drone.movement(
+            outputAutoPilot.Roll,
+            outputAutoPilot.Pitch,
+            outputAutoPilot.Gaz,
+            outputAutoPilot.Yaw);
 
-        int counter = 0;
-        int threshold = 20;
-
-        std::cout << "Yawwwww Speeeed: " << yawSpeed << std::endl;
-        while (counter <= threshold) {
-            float currentAngle = drone.getPsiAngle() / 1000.0;
-            if (std::abs(angleCible - currentAngle) <= 10.0) {
-                break;
-            }
-            drone.movement(0.0, 0.0, 0.0, yawSpeed);
-            std::this_thread::sleep_for(std::chrono::milliseconds(20));
-            counter++;
-        }
-
-        int left = (threshold - counter) * 20;
-
-        if (left > 0) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(left));
-        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
+
     drone.land();
 
     return 0;

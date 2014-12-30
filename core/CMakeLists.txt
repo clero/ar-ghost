@@ -21,9 +21,11 @@ find_package(Boost COMPONENTS log thread system REQUIRED)
 find_package (Threads REQUIRED)
 
 include_directories(
+    include
     ${PROJECT_SOURCE_DIR}/libDroneMovement/include
     ${PROJECT_SOURCE_DIR}/libDroneVideo/include
-    ${PROJECT_SOURCE_DIR}/libDroneVideoSharing/include)
+    ${PROJECT_SOURCE_DIR}/libDroneVideoSharing/include
+    ${PROJECT_SOURCE_DIR}/libLineFollowing/include)
 
 add_executable(
     main
@@ -31,6 +33,6 @@ add_executable(
 
 link_directories(${LIBRARY_OUTPUT_PATH})
 
-target_link_libraries(main DroneMovement DroneVideo ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(main DroneMovement DroneVideo LineFollowing ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 install(TARGETS main RUNTIME DESTINATION bin)

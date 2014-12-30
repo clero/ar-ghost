@@ -36,3 +36,15 @@ link_directories(${LIBRARY_OUTPUT_PATH})
 target_link_libraries(main DroneMovement DroneVideo LineFollowing ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
 install(TARGETS main RUNTIME DESTINATION bin)
+
+### Tests ###
+
+add_executable(
+    CarryingSystemCommunicationTest
+    test/CarryingSystemCommunicationTest.cpp
+    src/SerialCommunicator.cpp
+    src/CarryingSystemAtCommandFactory.cpp)
+
+target_link_libraries(CarryingSystemCommunicationTest ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
+
+install(TARGETS CarryingSystemCommunicationTest RUNTIME DESTINATION bin)

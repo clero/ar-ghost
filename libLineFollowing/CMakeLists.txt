@@ -14,8 +14,14 @@
 # limitations under the License.
 #
 
-# This file should contain every project which should be built for host and target
-add_subdirectory(libDroneVideo)
-add_subdirectory(libDroneMovement)
-add_subdirectory(libLineFollowing)
-add_subdirectory(core)
+### libLineFollowing ###
+
+include_directories(
+    include)
+
+add_library(
+    LineFollowing
+    src/CheckAngle.c
+    src/SystemDrone.c
+    src/kcg_consts.c
+    src/kcg_types.c)

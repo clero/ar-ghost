@@ -41,7 +41,7 @@ public:
     CircleDetector(const FrameType frame, const int imgWidth, const int mImgHeight);
     ~CircleDetector();
 
-    bool IsCircleInFrame();
+    bool isCircleInFrame();
     int getCenterXCoordinate();
     int getCenterYCoordinate();
     int getCircleRadius();
@@ -115,7 +115,7 @@ CircleDetector<FrameType>::~CircleDetector()
 }
 
 template <class FrameType>
-bool CircleDetector<FrameType>::IsCircleInFrame()
+bool CircleDetector<FrameType>::isCircleInFrame()
 {
     return mIsCircleInFrame;
 }

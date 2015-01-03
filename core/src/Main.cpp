@@ -15,109 +15,12 @@
  *
  */
 
-extern "C"
-{
-/** LibLineFollowing */
-#include "SystemDrone.h"
-}
-
-#include <libDroneMovement/Drone.hpp>
-#include <libDroneVideo/FrameGrabber.hpp>
-#include <libDroneVideo/LineDetector.hpp>
-
-#include <chrono>
-#include <thread>
+#include "core/EntryPoint.hpp"
 
 int main(void)
 {
-    using namespace ghost::libDroneMovement;
-    using namespace ghost::libDroneVideo;
-
-    Drone drone("127.0.0.1");
-    FrameGrabber frameGrabber = FrameGrabber();
-
-    // Auto Pilot initialization
-    inC_SystemDrone inputAutoPilot;
-    outC_SystemDrone outputAutoPilot;
-
-    SystemDrone_init(&outputAutoPilot);
-
-    drone.takeOff();
-
-    // Drop Frames
-    frameGrabber.getNextVerticalFrame(),
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
-    double lineAngle = 0.0;
-    bool needToGoLeft = false;
-    bool needToGoRight = false;
-    bool needImageUpdate = true;
-    bool lineDetected = true;
-    int count = 0;
-
-    for (size_t i = 0; i < 1000; i++) {
-
-        if (i % 10 == 0) {
-            needImageUpdate = true;
-        }
-
-        if (needImageUpdate) {
-            // Frame Analysis
-            try {
-                LineDetector<FrameGrabber::DroneVerticalFrame> lineDetector(
-                    frameGrabber.getNextVerticalFrame(),
-                    320,
-                    240);
-
-                lineDetected = true;
-                count = 0;
-                lineAngle = lineDetector.getLineAngle();
-                needToGoRight = lineDetector.needToGoRight();
-                needToGoLeft = lineDetector.needToGoLeft();
-            }
-            catch (LineDetector<FrameGrabber::DroneVerticalFrame>::LineDetectionError e) {
-                // log
-                // we don't see the line, let's assume we are good for now
-                lineAngle = 0.0;
-                count++;
-            }
-
-            if (count >= 5) {
-                lineDetected = false;
-            }
-
-            inputAutoPilot.LineAngle = lineAngle;
-            inputAutoPilot.RightWay = true;
-            inputAutoPilot.GoLeft = needToGoLeft;
-            inputAutoPilot.GoRight = needToGoRight;
-            inputAutoPilot.ImageUpdate = needImageUpdate;
-            inputAutoPilot.LineDetected = lineDetected;
-
-            needImageUpdate = false;
-        } else {
-            inputAutoPilot.ImageUpdate = needImageUpdate;
-        }
-
-        float currentAngle = drone.getPsiAngle() / 1000.0;
-
-        inputAutoPilot.currentAngle = currentAngle;
-
-        std::cout << "Angle Ligne: " << lineAngle << std::endl;
-        std::cout << "Angle Drone: " << currentAngle << std::endl;
-        std::cout << "Yaw speed Drone: " << outputAutoPilot.Yaw << std::endl;
-
-        SystemDrone(&inputAutoPilot, &outputAutoPilot);
-
-        drone.movement(
-            outputAutoPilot.Roll,
-            outputAutoPilot.Pitch,
-            outputAutoPilot.Gaz,
-            outputAutoPilot.Yaw);
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(30));
-    }
-
-    drone.land();
+    ghost::core::EntryPoint entryPoint("127.0.0.1", 1000);
+    entryPoint.start();
 
     return 0;
 }

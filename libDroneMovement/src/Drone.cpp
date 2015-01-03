@@ -139,17 +139,17 @@ int Drone::getAltitude()
 
 float Drone::getPhiAngle()
 {
-    return mNavDataParser.getCurrentNavData().phi;
+    return mNavDataParser.getCurrentNavData().phi / 1000.0;
 }
 
 float Drone::getThetaAngle()
 {
-    return mNavDataParser.getCurrentNavData().theta;
+    return mNavDataParser.getCurrentNavData().theta / 1000.0;
 }
 
 float Drone::getPsiAngle()
 {
-    return mNavDataParser.getCurrentNavData().psi;
+    return mNavDataParser.getCurrentNavData().psi / 1000.0;
 }
 
 } /* libDroneMovement namespace  */

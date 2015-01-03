@@ -29,7 +29,8 @@ include_directories(
 
 add_executable(
     main
-    src/Main.cpp)
+    src/Main.cpp
+    src/EntryPoint.cpp)
 
 link_directories(${LIBRARY_OUTPUT_PATH})
 

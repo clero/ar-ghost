@@ -30,7 +30,8 @@ include_directories(
 add_executable(
     main
     src/Main.cpp
-    src/EntryPoint.cpp)
+    src/EntryPoint.cpp
+    src/DestinationPointFlyer.cpp)
 
 link_directories(${LIBRARY_OUTPUT_PATH})
 

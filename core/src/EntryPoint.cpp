@@ -94,7 +94,7 @@ void EntryPoint::doNextAction()
     }
 
     // Get current Psi Angle
-    mInputAutoPilot.currentAngle = mDrone.getPsiAngle() / 1000.0;
+    mInputAutoPilot.currentAngle = mDrone.getPsiAngle();
 
     // Calcualte the needed movement
     SystemDrone(&mInputAutoPilot, &mOutputAutoPilot);

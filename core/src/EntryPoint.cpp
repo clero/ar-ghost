@@ -16,7 +16,9 @@
  */
 
 #include "core/EntryPoint.hpp"
+#include "core/DestinationPointFlyer.hpp"
 #include <libDroneVideo/LineDetector.hpp>
+#include <libDroneVideo/CircleDetector.hpp>
 
 #include <boost/log/trivial.hpp>
 
@@ -28,9 +30,27 @@ namespace ghost
 namespace core
 {
 
+const std::string EntryPoint::mCarryingSystemTty = "/dev/ttyO3";
+const uint32_t EntryPoint::mCarryingSystemTtyBaudRate = 115200;
+
 EntryPoint::EntryPoint(const std::string& droneIpAdress, const unsigned int flyingStepNumber)
-    : mDrone(droneIpAdress), mFrameGrabber(), mFlyingStepNumber(flyingStepNumber),
-    mCurrentFlyingStep(0), mLineLostCounter(0), mInputAutoPilot(), mOutputAutoPilot()
+    : mDrone(droneIpAdress), mFrameGrabber(),
+    mCarryingSystemSerialCommunicator(mCarryingSystemTty, mCarryingSystemTtyBaudRate), mMission(),
+    mFlyingStepNumber(flyingStepNumber), mCurrentFlyingStep(0), mLineLostCounter(0),
+    mInputAutoPilot(), mOutputAutoPilot()
+{
+    SystemDrone_init(&mOutputAutoPilot);
+}
+
+EntryPoint::EntryPoint(
+    const std::string& droneIpAdress,
+    const unsigned int flyingStepNumber,
+    const std::string& jsonMissionFile)
+    : mDrone(droneIpAdress), mFrameGrabber(),
+    mCarryingSystemSerialCommunicator(mCarryingSystemTty, mCarryingSystemTtyBaudRate),
+    mMission(jsonMissionFile, mCarryingSystemSerialCommunicator),
+    mFlyingStepNumber(flyingStepNumber), mCurrentFlyingStep(0), mLineLostCounter(0),
+    mInputAutoPilot(), mOutputAutoPilot()
 {
     SystemDrone_init(&mOutputAutoPilot);
 }
@@ -47,6 +67,38 @@ inline bool EntryPoint::isLineFound() const
 
 void EntryPoint::updateAutoPilotInputWithFrame()
 {
+    if (!mMission.isDone()) {
+        /**
+         * We have some unfinished mission step, let's check if we see a circle
+         * which is the place to execute a mission step
+         */
+        libDroneVideo::CircleDetector<libDroneVideo::FrameGrabber::DroneVerticalFrame>
+        circleDetector(
+            mFrameGrabber.getNextVerticalFrame(),
+            320,
+            240);
+
+        if (circleDetector.isCircleInFrame()
+            && circleDetector.getCircleRadius() >= 60
+            && circleDetector.getCenterYCoordinate() <= 100) {
+            // TODO: Here, we are out of the lineFollowing algorithm, we need to reset the state machine
+            SystemDrone_reset(&mOutputAutoPilot);
+            SystemDrone_init(&mOutputAutoPilot);
+
+            /**
+             * We found a circle which is in the upper part of the frame, and we have something to do
+             * above it (the mission is not empty), let's go directly above ir.
+             */
+            mission::DestinationPointFlyer(
+                mDrone,
+                mFrameGrabber,
+                circleDetector.getCenterXCoordinate(),
+                circleDetector.getCenterYCoordinate()).start();
+
+            mMission.doNextStep();
+        }
+    }
+
     // Frame Analysis
     try {
         libDroneVideo::LineDetector<libDroneVideo::FrameGrabber::DroneVerticalFrame> lineDetector(

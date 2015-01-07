@@ -15,6 +15,9 @@
  *
  */
 
+#include "core/Mission.hpp"
+#include "core/SerialCommunicator.hpp"
+
 extern "C"
 {
 /** LibLineFollowing */
@@ -43,11 +46,18 @@ public:
      *            Each step are approximatively 30ms long
      */
     EntryPoint(const std::string& droneIpAdress, const unsigned int flyingStepNumber);
+    EntryPoint(
+        const std::string& droneIpAdress,
+        const unsigned int flyingStepNumber,
+        const std::string& jsonMissionFile);
 
     /** Launch the algorithm */
     void start();
 
 private:
+
+    static const std::string mCarryingSystemTty;
+    static const uint32_t mCarryingSystemTtyBaudRate;
 
     inline bool needImageUpdate() const;
     inline bool isLineFound() const;
@@ -58,6 +68,8 @@ private:
 
     libDroneMovement::Drone mDrone;
     libDroneVideo::FrameGrabber mFrameGrabber;
+    utilities::SerialCommunicator mCarryingSystemSerialCommunicator;
+    mission::Mission mMission;
 
     unsigned int mFlyingStepNumber;
     unsigned int mCurrentFlyingStep;

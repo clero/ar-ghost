@@ -31,7 +31,14 @@ add_executable(
     main
     src/Main.cpp
     src/EntryPoint.cpp
-    src/DestinationPointFlyer.cpp)
+    src/DestinationPointFlyer.cpp
+    src/Mission.cpp
+    src/MissionStep.cpp
+    src/MissionStepSendCarryingSystemCommand.cpp
+    src/SerialCommunicator.cpp
+    src/MissionParser.cpp
+    src/MissionStepFactory.cpp
+    src/CarryingSystemAtCommandFactory.cpp)
 
 link_directories(${LIBRARY_OUTPUT_PATH})
 

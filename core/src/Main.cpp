@@ -17,10 +17,99 @@
 
 #include "core/EntryPoint.hpp"
 
-int main(void)
-{
-    ghost::core::EntryPoint entryPoint("127.0.0.1", 1000);
-    entryPoint.start();
+#include <boost/log/trivial.hpp>
 
-    return 0;
+#include <stdint.h>
+#include <cstdlib>
+#include <string>
+
+/** Application configuration */
+struct Config {
+    std::string ipDrone;
+    std::string jsonMissionFile;
+    uint32_t flyingStepNumber;
+};
+
+void showHelp()
+{
+    BOOST_LOG_TRIVIAL(info) << "Usage:" << std::endl
+                            << "-i <Drone_ip_address> (optional)" << std::endl
+                            << "\tSet the drone local internet address. Default value is 127.0.0.1."
+                            << std::endl
+
+                            << "-m <Json_mission_file> (optional)" << std::endl
+                            << "\tSet the mission file to use to generate the mission." << std::endl
+
+                            << "-s <Step_Number> (optional)" << std::endl
+                            << "\tSet the algorithm step number. Default value is 1000."
+                            << std::endl;
+}
+
+/**
+ * Init the sample application configuration from the command line
+ * @return true if the supplied parameters are correct
+ */
+bool initConfigFromCmdLine(int argc, char* argv[], Config& appConfig)
+{
+    static const char* const optstring = "i:m:s:h";
+    int opt;
+
+    while ((opt = getopt(argc, argv, optstring)) != -1) {
+
+        switch (opt) {
+        case 'i':
+            appConfig.ipDrone = optarg;
+            break;
+        case 'm':
+            appConfig.jsonMissionFile = optarg;
+            break;
+        case 's':
+            try {
+                appConfig.flyingStepNumber = std::stoi(optarg);
+            }
+            catch (std::invalid_argument& e) {
+                BOOST_LOG_TRIVIAL(error) << "Invalid value : " << optarg << " for -s option"
+                                         << ", the argument should be an integer value."
+                                         << std::endl;
+                showHelp();
+                return false;
+            }
+            break;
+        case 'h':
+            showHelp();
+            return false;
+        default:
+            BOOST_LOG_TRIVIAL(error) << "Unsuported option " << (char)opt
+                                     << ", the command line is incorrect." << std::endl;
+            showHelp();
+            return false;
+        }
+    }
+
+    return true;
+}
+
+int main(int argc, char* argv[])
+{
+    Config appConfig = {
+        "127.0.0.1",
+        "",
+        1000,
+    };
+
+    // Get the config
+    if (!initConfigFromCmdLine(argc, argv, appConfig)) {
+        return EXIT_FAILURE;
+    }
+
+    if (appConfig.jsonMissionFile.compare("") == 0) {
+        // No mission file provided
+        ghost::core::EntryPoint(appConfig.ipDrone, appConfig.flyingStepNumber).start();
+    } else {
+        ghost::core::EntryPoint(appConfig.ipDrone,
+                                appConfig.flyingStepNumber,
+                                appConfig.jsonMissionFile).start();
+    }
+
+    return EXIT_SUCCESS;
 }

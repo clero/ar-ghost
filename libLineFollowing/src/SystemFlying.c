@@ -187,20 +187,20 @@ void SystemFlying(
         outC->Yaw = 0.0;
         outC->Gaz = 0.0;
         outC->Pitch = 0.0;
-        outC->Roll = -0.2;
+        outC->Roll = -0.1;
         break;
     case SSM_st_GO_RIGHT_FlyingMode:
         outC->FlyingMode_state_nxt = SSM_st_GO_RIGHT_FlyingMode;
         outC->Yaw = 0.0;
         outC->Gaz = 0.0;
         outC->Pitch = 0.0;
-        outC->Roll = 0.2;
+        outC->Roll = 0.1;
         break;
     case SSM_st_FLYING_FlyingMode:
         outC->FlyingMode_state_nxt = SSM_st_FLYING_FlyingMode;
         outC->Yaw = 0.0;
         outC->Gaz = 0.0;
-        outC->Pitch = -0.2;
+        outC->Pitch = -0.08;
         outC->Roll = 0.0;
         break;
 

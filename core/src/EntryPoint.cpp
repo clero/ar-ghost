@@ -111,7 +111,11 @@ void EntryPoint::doNextAction()
 void EntryPoint::start()
 {
     mDrone.takeOff();
-    // Drop Frames
+    mDrone.hover();
+
+    // Drop some frames in order to see the line
+    mFrameGrabber.getNextVerticalFrame(),
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
     mFrameGrabber.getNextVerticalFrame(),
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 

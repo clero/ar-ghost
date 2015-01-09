@@ -35,7 +35,8 @@ AtCommandSender::AtCommandSender(const std::string& droneIpAddress,
                                  AtCommandFactory& atCommandFactory)
     : mIoService(), mAtCommandSocket(mIoService, boost::asio::ip::udp::v4()),
     mDroneEndpoint(boost::asio::ip::address::from_string(droneIpAddress), mAtCommandPort),
-    mAtCommandQueue(1024), mAtCommandFactory(atCommandFactory), mStopCommandSenderThread(false)
+    mAtCommandQueue(1024), mAtCommandFactory(atCommandFactory), mStopCommandSenderThread(false),
+    mEmptyQueueCounter(0)
 {
 }
 
@@ -80,13 +81,19 @@ void AtCommandSender::sendingProcess()
 
         if (mAtCommandQueue.pop(nextAtCommand)) {
             mIsSendingQueueEmpty = false;
+            mEmptyQueueCounter = 0;
             sendToDrone(nextAtCommand);
             BOOST_LOG_TRIVIAL(info) << "Sending: " << nextAtCommand;
+            std::this_thread::sleep_for(std::chrono::milliseconds(25));
         } else {
             mIsSendingQueueEmpty = true;
-            sendToDrone(mAtCommandFactory.hoveringCommand());
+            if (++mEmptyQueueCounter > 15) {
+                sendToDrone(mAtCommandFactory.hoveringCommand());
+            }
+            // sendToDrone(mAtCommandFactory.hoveringCommand());
+            std::this_thread::sleep_for(std::chrono::milliseconds(2));
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(25));
+        // std::this_thread::sleep_for(std::chrono::milliseconds(25));
     }
 
     /**

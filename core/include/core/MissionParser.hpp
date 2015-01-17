@@ -31,18 +31,24 @@ namespace mission
 namespace factory
 {
 
+/** Parser class which allows to retrieve mission steps from a json file */
 class MissionParser
 {
 public:
 
-    /** Class constructor
-     */
+    /** Class constructor */
     MissionParser();
 
+    /**
+     * Retrieve MissionStep child classes to create from a json file
+     *
+     * @param[in] jsonMissionFile the file to parse
+     */
     MissionStepFactory::ParsedMissionSteps parseMissionFile(const std::string& jsonMissionFile);
 
 private:
 
+    /** Static map to link json keys to MissionStepType enumerate */
     static const std::map<const std::string,
                           const MissionStepFactory::MissionStepType> mFileKeywordToCommandMap;
 

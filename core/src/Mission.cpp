@@ -17,6 +17,8 @@
 
 #include "core/Mission.hpp"
 
+#include <boost/log/trivial.hpp>
+
 namespace ghost
 {
 namespace core
@@ -29,9 +31,11 @@ Mission::Mission() : mMissionSteps()
 }
 
 Mission::Mission(const std::string& jsonMissionFile,
-                 utilities::SerialCommunicator& carryingSystemSerialCommunicator)
+                 utilities::SerialCommunicator& carryingSystemSerialCommunicator,
+                 libDroneMovement::Drone& drone)
     : mMissionSteps(factory::MissionStepFactory(
-                        carryingSystemSerialCommunicator).generateMissionStepsFromFile(
+                        carryingSystemSerialCommunicator,
+                        drone).generateMissionStepsFromFile(
                         jsonMissionFile))
 {
 }
@@ -44,6 +48,7 @@ bool Mission::isDone() const
 
 void Mission::doNextStep()
 {
+    BOOST_LOG_TRIVIAL(debug) << "Launch next action";
     mMissionSteps.front()->doAction();
     mMissionSteps.pop();
 }

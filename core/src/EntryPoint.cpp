@@ -37,7 +37,7 @@ EntryPoint::EntryPoint(const std::string& droneIpAdress, const unsigned int flyi
     : mDrone(droneIpAdress), mFrameGrabber(),
     mCarryingSystemSerialCommunicator(mCarryingSystemTty, mCarryingSystemTtyBaudRate), mMission(),
     mFlyingStepNumber(flyingStepNumber), mCurrentFlyingStep(0), mLineLostCounter(0),
-    mInputAutoPilot(), mOutputAutoPilot()
+    mForgetMissionCounter(0), mInputAutoPilot(), mOutputAutoPilot()
 {
     SystemDrone_init(&mOutputAutoPilot);
 }
@@ -48,7 +48,7 @@ EntryPoint::EntryPoint(
     const std::string& jsonMissionFile)
     : mDrone(droneIpAdress), mFrameGrabber(),
     mCarryingSystemSerialCommunicator(mCarryingSystemTty, mCarryingSystemTtyBaudRate),
-    mMission(jsonMissionFile, mCarryingSystemSerialCommunicator),
+    mMission(jsonMissionFile, mCarryingSystemSerialCommunicator, mDrone),
     mFlyingStepNumber(flyingStepNumber), mCurrentFlyingStep(0), mLineLostCounter(0),
     mInputAutoPilot(), mOutputAutoPilot()
 {
@@ -67,7 +67,7 @@ inline bool EntryPoint::isLineFound() const
 
 void EntryPoint::updateAutoPilotInputWithFrame()
 {
-    if (!mMission.isDone()) {
+    if (!mMission.isDone() && mForgetMissionCounter > 10) {
         /**
          * We have some unfinished mission step, let's check if we see a circle
          * which is the place to execute a mission step
@@ -78,12 +78,14 @@ void EntryPoint::updateAutoPilotInputWithFrame()
             320,
             240);
 
-        if (circleDetector.isCircleInFrame()
-            && circleDetector.getCircleRadius() >= 60
-            && circleDetector.getCenterYCoordinate() <= 100) {
-            // TODO: Here, we are out of the lineFollowing algorithm, we need to reset the state machine
+        if (circleDetector.isCircleInFrame() && circleDetector.getCircleRadius() >= 30) {
+
+            mForgetMissionCounter = 0;
+
+            // Here, we are out of the lineFollowing algorithm, we need to reset the state machine
             SystemDrone_reset(&mOutputAutoPilot);
             SystemDrone_init(&mOutputAutoPilot);
+            BOOST_LOG_TRIVIAL(info) << "Circle Radius: " << circleDetector.getCircleRadius();
 
             /**
              * We found a circle which is in the upper part of the frame, and we have something to do
@@ -98,6 +100,8 @@ void EntryPoint::updateAutoPilotInputWithFrame()
             mMission.doNextStep();
         }
     }
+
+    mForgetMissionCounter++;
 
     // Frame Analysis
     try {
@@ -157,7 +161,7 @@ void EntryPoint::doNextAction()
         mOutputAutoPilot.Gaz,
         mOutputAutoPilot.Yaw);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+    std::this_thread::sleep_for(std::chrono::milliseconds(24));
 }
 
 void EntryPoint::start()

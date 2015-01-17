@@ -18,6 +18,9 @@
 #include "core/MissionStepFactory.hpp"
 #include "core/MissionParser.hpp"
 #include "core/MissionStepSendCarryingSystemCommand.hpp"
+#include "core/MissionStepDroneAngularMovement.hpp"
+#include "core/MissionStepDroneLand.hpp"
+#include "core/MissionStepDoNothing.hpp"
 #include "core/CarryingSystemAtCommandFactory.hpp"
 
 #include <queue>
@@ -33,8 +36,9 @@ namespace factory
 {
 
 MissionStepFactory::MissionStepFactory(
-    utilities::SerialCommunicator& droneSerialCommunicator)
-    : mDroneSerialCommunicator(droneSerialCommunicator)
+    utilities::SerialCommunicator& droneSerialCommunicator,
+    libDroneMovement::Drone& drone)
+    : mDroneSerialCommunicator(droneSerialCommunicator), mDrone(drone)
 {
 }
 
@@ -55,11 +59,15 @@ std::shared_ptr<step::MissionStep> MissionStepFactory::makeMissionStep(
                                                       ::dropCommand()));
         break;
     case MissionStepType::DroneAngularMovement:
-        // TODO
-        return std::shared_ptr<step::MissionStep>(new step::MissionStepSendCarryingSystemCommand(
-                                                      mDroneSerialCommunicator,
-                                                      carryingSystem::CarryingSystemAtCommandFactory
-                                                      ::liftCommand()));
+        return std::shared_ptr<step::MissionStep>(new step::MissionStepDroneAngularMovement(
+                                                      mDrone,
+                                                      180));
+        break;
+    case MissionStepType::DroneLand:
+        return std::shared_ptr<step::MissionStep>(new step::MissionStepDroneLand(mDrone));
+        break;
+    case MissionStepType::DoNothing:
+        return std::shared_ptr<step::MissionStep>(new step::MissionStepDoNothing());
         break;
     }
 

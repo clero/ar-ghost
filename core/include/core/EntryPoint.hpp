@@ -15,6 +15,8 @@
  *
  */
 
+#pragma once
+
 #include "core/Mission.hpp"
 #include "core/SerialCommunicator.hpp"
 
@@ -39,7 +41,8 @@ class EntryPoint
 {
 public:
 
-    /** Class constructor
+    /**
+     * Class constructor
      *
      * @param[in] droneIpAdress the drone ip address
      * @param[in] flyingStepNumber the number of step the algorithm should realize.
@@ -56,15 +59,23 @@ public:
 
 private:
 
+    /** Tty to interact with the embeded carrying system */
     static const std::string mCarryingSystemTty;
+
+    /** Baudrate of the serial connection of the carrying system */
     static const uint32_t mCarryingSystemTtyBaudRate;
 
+    /** Check if we need a new image */
     inline bool needImageUpdate() const;
+
+    /** Check if the line is lost or not */
     inline bool isLineFound() const;
 
+    /** Run a new step of the line following algorithm */
     void updateAutoPilotInputWithFrame();
-    void doNextAction();
 
+    /** Do the calculated movement */
+    void doNextAction();
 
     libDroneMovement::Drone mDrone;
     libDroneVideo::FrameGrabber mFrameGrabber;
@@ -74,6 +85,9 @@ private:
     unsigned int mFlyingStepNumber;
     unsigned int mCurrentFlyingStep;
     unsigned int mLineLostCounter;
+
+    /** Used in order to avoid double mission trigger detection */
+    unsigned int mForgetMissionCounter;
 
     /** Scade Auto Pilot state Machine variables */
     inC_SystemDrone mInputAutoPilot;

@@ -20,6 +20,7 @@
 #include "core/MissionStep.hpp"
 #include "core/MissionStepFactory.hpp"
 #include "core/SerialCommunicator.hpp"
+#include <libDroneMovement/Drone.hpp>
 
 #include <string>
 
@@ -45,7 +46,8 @@ public:
      */
     Mission();
     Mission(const std::string& jsonMissionFile,
-            utilities::SerialCommunicator& carryingSystemSerialCommunicator);
+            utilities::SerialCommunicator& carryingSystemSerialCommunicator,
+            libDroneMovement::Drone& drone);
     Mission(const std::string& jsonMissionFile);
 
     /** Check if we have other mission step to do */

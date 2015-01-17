@@ -17,7 +17,7 @@
 ### Core ###
 
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost COMPONENTS log thread system REQUIRED)
+find_package(Boost COMPONENTS log thread system filesystem REQUIRED)
 find_package (Threads REQUIRED)
 
 include_directories(
@@ -34,7 +34,10 @@ add_executable(
     src/DestinationPointFlyer.cpp
     src/Mission.cpp
     src/MissionStep.cpp
+    src/MissionStepDoNothing.cpp
     src/MissionStepSendCarryingSystemCommand.cpp
+    src/MissionStepDroneAngularMovement.cpp
+    src/MissionStepDroneLand.cpp
     src/SerialCommunicator.cpp
     src/MissionParser.cpp
     src/MissionStepFactory.cpp

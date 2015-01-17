@@ -35,7 +35,9 @@ const std::map<const std::string,
                const MissionStepFactory::MissionStepType> MissionParser::mFileKeywordToCommandMap =
 { { "LiftParcel", MissionStepFactory::LiftParcel },
   { "DropParcel", MissionStepFactory::DropParcel },
-  { "DroneAngularMovement", MissionStepFactory::DroneAngularMovement } };
+  { "DroneAngularMovement", MissionStepFactory::DroneAngularMovement },
+  { "DoNothing", MissionStepFactory::DoNothing },
+  { "DroneLand", MissionStepFactory::DroneLand } };
 
 MissionParser::MissionParser()
 {

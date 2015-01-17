@@ -18,6 +18,8 @@
 #include "core/EntryPoint.hpp"
 
 #include <boost/log/trivial.hpp>
+#include <boost/log/utility/setup/file.hpp>
+#include <boost/log/utility/setup/console.hpp>
 
 #include <stdint.h>
 #include <cstdlib>
@@ -89,6 +91,12 @@ bool initConfigFromCmdLine(int argc, char* argv[], Config& appConfig)
     return true;
 }
 
+void initLog()
+{
+    boost::log::add_file_log("ghost_main.log");
+    boost::log::add_console_log(std::cout);
+}
+
 int main(int argc, char* argv[])
 {
     Config appConfig = {
@@ -96,6 +104,8 @@ int main(int argc, char* argv[])
         "",
         1000,
     };
+
+    initLog();
 
     // Get the config
     if (!initConfigFromCmdLine(argc, argv, appConfig)) {

@@ -15,6 +15,8 @@
  *
  */
 
+#pragma once
+
 #include <string>
 
 namespace ghost
@@ -29,13 +31,6 @@ class CarryingSystemAtCommandFactory
 {
 
 public:
-
-    /** Ackable Commands */
-    enum AtCommandReceivable {
-        LIFTED = 666,
-        DROPED,
-        ACK
-    };
 
     /** Generate the AT Command allowing the carrying system to lift the packet */
     static const std::string liftCommand();
@@ -60,9 +55,6 @@ private:
 
     /** General method which allows to create an AT Command without arguments. */
     static const std::string commandFactory(const std::string& atCmdHeader);
-
-    /** General method which allows to create an AT Command with one argument. */
-    // const std::string commandFactory(const std::string& atCmdHeader, const std::string& atCmdParameter);
 
     static const std::string determineParameter(const std::string& atCmd);
     static const std::string determineHeader(const std::string& atCmd);

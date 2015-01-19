@@ -34,12 +34,27 @@ class SerialCommunicator
 {
 public:
 
+    /**
+     * Class constructor
+     *
+     * @param[in] serialPort the tty to open
+     * @param[in] baudRate the baudrate to use
+     */
     SerialCommunicator(const std::string& serialPort, const uint32_t baudRate);
     ~SerialCommunicator();
 
-    /** Read next line */
+    /**
+     * Read next line
+     *
+     * @return the readed line
+     */
     std::string readLine();
 
+    /**
+     * Send a string through the opened serial port
+     *
+     * @param[in] message the message to send
+     */
     void send(const std::string& message);
 
 private:

@@ -46,11 +46,21 @@ public:
      */
     MissionStepFactory::ParsedMissionSteps parseMissionFile(const std::string& jsonMissionFile);
 
+    /**
+     * Get parsed Mission Step parameters
+     *
+     * @return a container filled with parameters in order of apparition
+     */
+    MissionStepFactory::MissionStepTypeParameters getParameters();
+
 private:
 
     /** Static map to link json keys to MissionStepType enumerate */
     static const std::map<const std::string,
                           const MissionStepFactory::MissionStepType> mFileKeywordToCommandMap;
+
+    /** Mission Step parameters container */
+    MissionStepFactory::MissionStepTypeParameters mParameters;
 
 };
 

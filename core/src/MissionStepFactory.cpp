@@ -43,7 +43,8 @@ MissionStepFactory::MissionStepFactory(
 }
 
 std::shared_ptr<step::MissionStep> MissionStepFactory::makeMissionStep(
-    MissionStepFactory::MissionStepType missionStepType)
+    MissionStepFactory::MissionStepType& missionStepType,
+    MissionStepFactory::MissionStepTypeParameters& missionStepTypeParameters)
 {
     switch (missionStepType) {
     case MissionStepType::LiftParcel:
@@ -58,11 +59,14 @@ std::shared_ptr<step::MissionStep> MissionStepFactory::makeMissionStep(
                                                       carryingSystem::CarryingSystemAtCommandFactory
                                                       ::dropCommand()));
         break;
-    case MissionStepType::DroneAngularMovement:
+    case MissionStepType::DroneAngularMovement: {
+        uint32_t angle = missionStepTypeParameters.front();
+        missionStepTypeParameters.erase(missionStepTypeParameters.begin());
         return std::shared_ptr<step::MissionStep>(new step::MissionStepDroneAngularMovement(
                                                       mDrone,
-                                                      180));
-        break;
+                                                      angle));
+    }
+    break;
     case MissionStepType::DroneLand:
         return std::shared_ptr<step::MissionStep>(new step::MissionStepDroneLand(mDrone));
         break;
@@ -79,7 +83,9 @@ MissionStepFactory::MissionSteps MissionStepFactory::generateMissionStepsFromFil
     const std::string& jsonMissionFile)
 {
     // Parse mission file
-    ParsedMissionSteps parsedMissionSteps = MissionParser().parseMissionFile(jsonMissionFile);
+    MissionParser missionParser = MissionParser();
+    ParsedMissionSteps parsedMissionSteps = missionParser.parseMissionFile(jsonMissionFile);
+    MissionStepTypeParameters missionStepTypeParameters = missionParser.getParameters();
 
     // Create steps container
     MissionSteps missionSteps;
@@ -87,7 +93,7 @@ MissionStepFactory::MissionSteps MissionStepFactory::generateMissionStepsFromFil
     for (MissionStepType type : parsedMissionSteps) {
         // Parser sometimes 0 value to type, we need to avoid that
         if ((int)type != 0) {
-            missionSteps.push(makeMissionStep(type));
+            missionSteps.push(makeMissionStep(type, missionStepTypeParameters));
         }
     }
 

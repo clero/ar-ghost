@@ -39,8 +39,13 @@ const std::map<const std::string,
   { "DoNothing", MissionStepFactory::DoNothing },
   { "DroneLand", MissionStepFactory::DroneLand } };
 
-MissionParser::MissionParser()
+MissionParser::MissionParser() : mParameters()
 {
+}
+
+MissionStepFactory::MissionStepTypeParameters MissionParser::getParameters()
+{
+    return mParameters;
 }
 
 MissionStepFactory::ParsedMissionSteps MissionParser::parseMissionFile(
@@ -57,6 +62,14 @@ MissionStepFactory::ParsedMissionSteps MissionParser::parseMissionFile(
 
         try {
             parsedMissionSteps.push_back(mFileKeywordToCommandMap.at(missionStepType.first));
+
+            if (parsedMissionSteps.back() ==
+                MissionStepFactory::MissionStepType::DroneAngularMovement) {
+                // We need to read the parameter
+                mParameters.push_back(missionStepType.second.get_value<uint32_t>());
+                BOOST_LOG_TRIVIAL(debug) << "Parsing mission step parameter: "
+                                         << mParameters.back();
+            }
         }
         catch (std::out_of_range& e) {
             BOOST_LOG_TRIVIAL(error) << "While parsing mission : Undefined mission step : "

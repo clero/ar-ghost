@@ -55,6 +55,9 @@ public:
     /** Parser result type */
     typedef std::vector<MissionStepType> ParsedMissionSteps;
 
+    /** Mission Step parameters container */
+    typedef std::vector<uint32_t> MissionStepTypeParameters;
+
     /** Class constructor */
     MissionStepFactory(
         utilities::SerialCommunicator& droneSerialCommunicator,
@@ -78,7 +81,9 @@ private:
      *
      * @return a shared pointer to the generated MissionStep object
      */
-    std::shared_ptr<step::MissionStep> makeMissionStep(MissionStepType missionStepType);
+    std::shared_ptr<step::MissionStep> makeMissionStep(
+        MissionStepType& missionStepType,
+        MissionStepTypeParameters& missionStepTypeParameters);
 
     utilities::SerialCommunicator& mDroneSerialCommunicator;
     libDroneMovement::Drone& mDrone;

@@ -1,3 +1,4 @@
+#!/bin/sh
 #
 # Copyright 2014 Jules Cléro
 #
@@ -14,8 +15,11 @@
 # limitations under the License.
 #
 
-# This file should contain every project which should be built for host and target
-add_subdirectory(libDroneVideo)
-add_subdirectory(libDroneMovement)
-add_subdirectory(libLineFollowing)
-add_subdirectory(core)
+# Allows to relaunch Parrot's internal program with the libDroneVideoSharing in preload
+# to catch open, mmap and ioctl system calls
+
+# Kill program.elf running instance
+kk &&
+
+# Relaunch it with the system call catching library
+LD_PRELOAD=/libDroneVideoSharing.so /bin/program.elf.respawner.sh

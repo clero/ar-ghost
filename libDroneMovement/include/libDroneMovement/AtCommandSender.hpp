@@ -107,6 +107,8 @@ private:
     /** Indicate that the thread should quit */
     std::atomic_bool mStopCommandSenderThread;
 
+    int mEmptyQueueCounter;
+
 };
 
 } /* atCommand namespace */

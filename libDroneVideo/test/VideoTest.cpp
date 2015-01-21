@@ -32,16 +32,22 @@ int main(void)
     using namespace ghost::libDroneVideo;
 
     FrameGrabber frameGrabber = FrameGrabber();
+    double lineAngle = 0.0;
 
     for (size_t i = 0; i < 1000; i++) {
 
-        // Frame Analysis
-        LineDetector<FrameGrabber::DroneVerticalFrame> lineDetector(
-            frameGrabber.getNextVerticalFrame(),
-            320,
-            240);
+        try {
+            // Frame Analysis
+            LineDetector<FrameGrabber::DroneVerticalFrame> lineDetector(
+                frameGrabber.getNextVerticalFrame(),
+                320,
+                240);
 
-        double lineAngle = lineDetector.getLineAngle();
+            lineAngle = lineDetector.getLineAngle();
+        }
+        catch (LineDetector<FrameGrabber::DroneVerticalFrame>::LineDetectionError e) {
+            std::cout << "No line found" << std::endl;
+        }
 
         // Frame Analysis
         CircleDetector<FrameGrabber::DroneVerticalFrame> circleDetector(

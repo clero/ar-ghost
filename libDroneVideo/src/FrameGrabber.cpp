@@ -48,7 +48,7 @@ FrameGrabber::DroneVerticalFrame& FrameGrabber::getNextVerticalFrame()
 {
 
     int query = 0;
-    int failThreshold = 5;
+    int failThreshold = 20;
 
     do {
         // Check if the frame is ready
@@ -64,7 +64,7 @@ FrameGrabber::DroneVerticalFrame& FrameGrabber::getNextVerticalFrame()
 
             break;
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(25));
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     } while (++query != failThreshold);
 
     if (query == failThreshold) {
